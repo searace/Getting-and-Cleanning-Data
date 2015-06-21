@@ -1,0 +1,81 @@
+#Reading data source in csv format. read into data frame.
+
+feature_names <- read.table("UCI HAR Dataset/features.txt")
+activity_labels <- read.table("UCI HAR Dataset/activity_labels.txt", header = FALSE)
+subject_train <- read.table("UCI HAR Dataset/train/subject_train.txt", header = FALSE)
+activity_train <- read.table("UCI HAR Dataset/train/y_train.txt", header = FALSE)
+features_train <- read.table("UCI HAR Dataset/train/X_train.txt", header = FALSE)
+subject_test <- read.table("UCI HAR Dataset/test/subject_test.txt", header = FALSE)
+activity_test <- read.table("UCI HAR Dataset/test/y_test.txt", header = FALSE)
+features_test <- read.table("UCI HAR Dataset/test/X_test.txt", header = FALSE)
+
+#merging the subject, activity and features from train and test datasets
+#subject
+subject <- rbind(subject_train, subject_test)   
+
+#activity 
+activity <- rbind(activity_train, activity_test)
+
+#features
+features <- rbind(features_train, features_test)
+
+#naming the columns in feature data set.
+colnames(features) <- t(feature_names[2])
+
+#naming the Activity and Subject column
+colnames(activity) <- "Activity"
+colnames(subject) <- "Subject"
+
+#Part 1: Merges the training and the test sets to create one data set.
+full_set_data <- cbind(subject, activity,features)
+
+#Match and filter the column indices with name for mean or standard deviation
+mean_std_column <- grep(".*mean.*|.*std.*", names(full_set_data))
+
+#get require column, subject, activity and columns with mean or standard deviation
+required_column <- c( 1, 2, mean_std_column)
+
+#Part 2: Extracts only the measurements on the mean and standard deviation for each measurement.
+#extract require data
+required_data <- full_set_data[,required_column]
+write.table(required_data, file = "required_data.txt", row.names = FALSE)
+
+#get activity column
+required_data$Activity <- as.character(required_data$Activity)
+
+#Part 3: Uses descriptive activity names to name the activities in the data set
+#loop all data, match same activity and replace with activity label
+for (i in 1:6){
+        required_data$Activity[required_data$Activity == i] <- as.character(activity_labels[i,2])
+}
+
+#Part 4: Appropriately labels the data set with descriptive variable names.
+#Change column name to better naming.
+
+names(required_data)<-gsub("Acc", "Accelerometer", names(required_data))
+names(required_data)<-gsub("Gyro", "Gyroscope", names(required_data))
+names(required_data)<-gsub("BodyBody", "Body", names(required_data))
+names(required_data)<-gsub("Mag", "Magnitude", names(required_data))
+names(required_data)<-gsub("^t", "Time", names(required_data))
+names(required_data)<-gsub("^f", "Frequency", names(required_data))
+names(required_data)<-gsub("tBody", "TimeBody", names(required_data))
+names(required_data)<-gsub("-mean()", "Mean", names(required_data))
+names(required_data)<-gsub("-std()", "STD", names(required_data))
+names(required_data)<-gsub("-freq()", "Frequency", names(required_data))
+names(required_data)<-gsub("angle", "Angle", names(required_data))
+names(required_data)<-gsub("gravity", "Gravity", names(required_data))
+
+#Part 5: From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
+
+#Factor data Subject and Activity for Grouping 
+required_data$Subject <- as.factor(required_data$Subject)
+required_data$Activity <- as.factor(required_data$Activity)
+
+
+#aggregation
+
+tidy_data <- suppressWarnings(aggregate(required_data,
+                                       list(Activity = required_data$Activity, Subject = required_data$Subject), mean))
+
+tidy_data <- tidy_data[-c(3:4)]       #drop the NA columns
+write.table(tidy_data, "tidy_data.txt", row.names = FALSE) # write out the 2nd dataset

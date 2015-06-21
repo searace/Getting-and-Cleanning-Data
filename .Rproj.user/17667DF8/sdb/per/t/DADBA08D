@@ -1,0 +1,22 @@
+{
+    "contents" : "",
+    "created" : 1434812570908.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "DADBA08D",
+    "lastKnownWriteTime" : 7667823,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "caption" : "features_test",
+        "contentUrl" : "content?title=features_test&file=5cf342cb2b63402497808d8d70edfc2f.htm",
+        "displayedObservations" : "1000",
+        "displayedVariables" : 100,
+        "totalObservations" : "2947",
+        "variables" : "561"
+    },
+    "source_on_save" : false,
+    "type" : "r_dataframe"
+}

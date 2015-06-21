@@ -1,0 +1,22 @@
+{
+    "contents" : "",
+    "created" : 1434812579695.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "19C798C2",
+    "lastKnownWriteTime" : 912601442,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "caption" : "features_train",
+        "contentUrl" : "content?title=features_train&file=1d860aec336540949760b8c50e79795e.htm",
+        "displayedObservations" : "1000",
+        "displayedVariables" : 100,
+        "totalObservations" : "7352",
+        "variables" : "561"
+    },
+    "source_on_save" : false,
+    "type" : "r_dataframe"
+}
